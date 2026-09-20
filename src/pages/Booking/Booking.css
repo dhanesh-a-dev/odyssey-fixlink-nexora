@@ -1,0 +1,142 @@
+.booking-page {
+  padding-bottom: 4rem;
+}
+
+.booking-layout {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 2rem;
+}
+
+.booking-form-section, .summary-card {
+  padding: 2rem;
+}
+
+.booking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-group label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  color: var(--text-primary);
+}
+
+.form-input {
+  padding: 0.75rem 1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-color);
+  background: var(--surface-color);
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  transition: border-color var(--transition-fast);
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.btn-block {
+  width: 100%;
+}
+
+.summary-card {
+  position: sticky;
+  top: 100px;
+}
+
+.summary-card h3 {
+  margin-bottom: 1.5rem;
+}
+
+.summary-pro {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 1.5rem;
+}
+
+.summary-pro img {
+  width: 50px;
+  height: 50px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.summary-pro div {
+  display: flex;
+  flex-direction: column;
+}
+
+.summary-pro span {
+  font-size: 0.875rem;
+  color: var(--text-secondary);
+}
+
+.summary-row {
+  margin-bottom: 0.75rem;
+  color: var(--text-primary);
+}
+
+.summary-note {
+  margin-top: 1.5rem;
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.success-card {
+  text-align: center;
+  padding: 4rem 2rem;
+  max-width: 500px;
+  width: 100%;
+}
+
+.success-icon {
+  color: var(--secondary-color);
+  margin: 0 auto 1.5rem;
+  border-radius: 50%;
+}
+
+.success-card h1 {
+  margin-bottom: 1rem;
+}
+
+.success-details {
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: var(--radius-md);
+  text-align: left;
+  line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+  .booking-layout {
+    grid-template-columns: 1fr;
+  }
+  .summary-card {
+    position: static;
+  }
+}
