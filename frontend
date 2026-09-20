@@ -1,0 +1,126 @@
+                    FIXLINK FRONTEND
+                           │
+                           ▼
+                ┌─────────────────────┐
+                │ 1. CHECK REPOSITORY │
+                │ Existing files?     │
+                │ Existing React app? │
+                │ package.json?       │
+                └──────────┬──────────┘
+                           │
+                           ▼
+                 ┌──────────────────┐
+                 │ 2. CREATE BRANCH │
+                 │ feature/frontend │
+                 └────────┬─────────┘
+                          │
+                          ▼
+              ┌─────────────────────────┐
+              │ 3. GIVE ANTIGRAVITY    │
+              │ PROJECT CONTEXT        │
+              │ FixLink + features +   │
+              │ design + constraints   │
+              └────────────┬────────────┘
+                           │
+                           ▼
+              ┌─────────────────────────┐
+              │ 4. CREATE PERSISTENT   │
+              │ PROJECT RULES / SPEC   │
+              │ so future agents know  │
+              │ what FixLink is        │
+              └────────────┬────────────┘
+                           │
+                           ▼
+                  ┌────────────────┐
+                  │ 5. PLAN UI     │
+                  │ Pages          │
+                  │ Components     │
+                  │ Navigation     │
+                  │ Data structure │
+                  └───────┬────────┘
+                          │
+                          ▼
+             ┌──────────────────────────┐
+             │ 6. BUILD DESIGN SYSTEM  │
+             │ Colors                   │
+             │ Typography               │
+             │ Buttons                 │
+             │ Cards                    │
+             │ Navbar                  │
+             │ Layout                  │
+             └────────────┬─────────────┘
+                          │
+                          ▼
+                 ┌─────────────────┐
+                 │ 7. HOME PAGE   │
+                 │ Hero           │
+                 │ Categories     │
+                 │ Nearby         │
+                 │ Marketplace    │
+                 └────────┬────────┘
+                          │
+              ┌───────────┼───────────┐
+              ▼           ▼           ▼
+        ┌──────────┐ ┌───────────┐ ┌─────────────┐
+        │ SERVICES │ │MARKETPLACE│ │ PROFESSIONAL│
+        └────┬─────┘ └─────┬─────┘ └──────┬──────┘
+             │             │              │
+             ▼             ▼              ▼
+          Search         Search          Profile
+          Filter         Filter          Skills
+          Cards          Listings        Rating
+             │             │              │
+             ▼             ▼              ▼
+         Service       Product          Booking
+          Profile       Details
+             │             │
+             └──────┬──────┘
+                    ▼
+             CONTACT / BOOKING
+                    │
+                    ▼
+              PROFESSIONAL
+                DASHBOARD
+                    │
+                    ▼
+                JOB REQUESTS
+                    │
+                    ▼
+             ┌──────────────────┐
+             │ 8. AI FEATURES  │
+             │ Smart Search     │
+             │ Image → Category │
+             └────────┬─────────┘
+                      │
+                      ▼
+             ┌──────────────────┐
+             │ 9. RESPONSIVE UI │
+             │ Desktop + Mobile │
+             └────────┬─────────┘
+                      │
+                      ▼
+             ┌──────────────────┐
+             │ 10. FRONTEND QA  │
+             │ Links            │
+             │ Buttons          │
+             │ Forms            │
+             │ Console errors   │
+             └────────┬─────────┘
+                      │
+                      ▼
+             ┌──────────────────┐
+             │ 11. GIT COMMIT   │
+             │ PUSH BRANCH      │
+             └────────┬─────────┘
+                      │
+                      ▼
+                 Pull Request
+                      │
+                      ▼
+                   main
+                      │
+                      ▼
+                 ┌──────────┐
+                 │ 12 VERCEL│
+                 │ DEPLOY   │
+                 └──────────┘
