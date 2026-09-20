@@ -1,0 +1,247 @@
+// FixLink Prisma Schema
+// Connect. Hire. Trade.
+// Configured for PostgreSQL on Vercel (Neon, Supabase, Vercel Postgres, Railway)
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  USER
+  PROVIDER
+  ADMIN
+}
+
+enum ProductCondition {
+  NEW
+  LIKE_NEW
+  GOOD
+  FAIR
+}
+
+enum ProductStatus {
+  ACTIVE
+  SOLD
+  REMOVED
+}
+
+enum ReportTargetType {
+  USER
+  PRODUCT
+  REVIEW
+}
+
+enum ReportStatus {
+  PENDING
+  RESOLVED
+  DISMISSED
+}
+
+model User {
+  id           String    @id @default(uuid())
+  name         String
+  email        String    @unique
+  passwordHash String
+  avatarUrl    String?
+  phone        String?
+  location     String    @default("Local Area")
+  latitude     Float?
+  longitude    Float?
+  role         Role      @default(USER)
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  // 1-to-1 relation with ProviderProfile (if user creates one)
+  providerProfile ProviderProfile?
+
+  // Products listed for sale
+  products Product[]
+
+  // Reviews given to providers as a customer
+  reviewsGiven Review[] @relation("Reviewer")
+
+  // Reviews received if user has a provider profile
+  reviewsReceived Review[] @relation("Provider")
+
+  // Direct messaging relations
+  sentMessages             Message[]                 @relation("SentMessages")
+  conversationParticipants ConversationParticipant[]
+
+  // Saved items
+  savedProviders SavedProvider[]
+  savedProducts  SavedProduct[]
+
+  // Reports filed by user
+  reportsFiled Report[] @relation("Reporter")
+
+  @@index([email])
+  @@index([role])
+  @@index([location])
+}
+
+model ProviderProfile {
+  id              String   @id @default(uuid())
+  userId          String   @unique
+  user            User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  profession      String   // e.g. Electrician, Plumber, Carpenter
+  bio             String?
+  experienceYears Int      @default(0)
+  skills          String   @default("[]") // JSON array of string tags
+  location        String
+  latitude        Float?
+  longitude       Float?
+  availability    String   @default("Available") // e.g. "Available", "Busy", "Weekends Only"
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  portfolio      PortfolioItem[]
+  savedByUsers   SavedProvider[]
+
+  @@index([profession])
+  @@index([location])
+}
+
+model PortfolioItem {
+  id          String          @id @default(uuid())
+  providerId  String
+  provider    ProviderProfile @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  title       String
+  description String?
+  imageUrl    String
+  createdAt   DateTime        @default(now())
+
+  @@index([providerId])
+}
+
+model Review {
+  id         String   @id @default(uuid())
+  providerId String   // References User.id of the service provider
+  provider   User     @relation("Provider", fields: [providerId], references: [id], onDelete: Cascade)
+  reviewerId String   // References User.id of the customer
+  reviewer   User     @relation("Reviewer", fields: [reviewerId], references: [id], onDelete: Cascade)
+  rating     Int      // 1 to 5
+  comment    String
+  createdAt  DateTime @default(now())
+
+  // Prevent users from spamming repeated reviews to the same provider
+  @@unique([providerId, reviewerId])
+  @@index([providerId])
+  @@index([reviewerId])
+}
+
+model Product {
+  id          String           @id @default(uuid())
+  sellerId    String
+  seller      User             @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  title       String
+  description String
+  price       Float
+  category    String           // e.g. Electronics, Phones, Furniture
+  condition   ProductCondition @default(GOOD)
+  location    String
+  latitude    Float?
+  longitude   Float?
+  status      ProductStatus    @default(ACTIVE)
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  images       ProductImage[]
+  savedByUsers SavedProduct[]
+
+  @@index([category])
+  @@index([status])
+  @@index([location])
+  @@index([sellerId])
+}
+
+model ProductImage {
+  id        String   @id @default(uuid())
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  imageUrl  String
+  createdAt DateTime @default(now())
+
+  @@index([productId])
+}
+
+model Conversation {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  participants ConversationParticipant[]
+  messages     Message[]
+}
+
+model ConversationParticipant {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId])
+  @@index([userId])
+  @@index([conversationId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  senderId       String
+  sender         User         @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  content        String
+  createdAt      DateTime     @default(now())
+  readAt         DateTime?
+
+  @@index([conversationId])
+  @@index([senderId])
+  @@index([createdAt])
+}
+
+model SavedProvider {
+  id                String          @id @default(uuid())
+  userId            String
+  user              User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  providerProfileId String
+  providerProfile   ProviderProfile @relation(fields: [providerProfileId], references: [id], onDelete: Cascade)
+  createdAt         DateTime        @default(now())
+
+  @@unique([userId, providerProfileId])
+  @@index([userId])
+  @@index([providerProfileId])
+}
+
+model SavedProduct {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  productId String
+  product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  @@unique([userId, productId])
+  @@index([userId])
+  @@index([productId])
+}
+
+model Report {
+  id          String           @id @default(uuid())
+  reporterId  String
+  reporter    User             @relation("Reporter", fields: [reporterId], references: [id], onDelete: Cascade)
+  targetType  ReportTargetType
+  targetId    String           // ID of the reported User, Product, or Review
+  reason      String
+  status      ReportStatus     @default(PENDING)
+  createdAt   DateTime         @default(now())
+
+  @@index([status])
+  @@index([targetType])
+  @@index([reporterId])
+}
