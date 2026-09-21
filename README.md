@@ -1,137 +1,167 @@
-# FixLink — Connect. Hire. Trade.
+# FixLink
 
-FixLink is a complete, modern full-stack local community platform combining **Local Skilled Services** (electricians, plumbers, carpenters, mechanics, cleaners) with a **Second-Hand Marketplace** (phones, laptops, tools, furniture, appliances) into a single, unified web application.
+## Problem Statement
 
-The entire frontend and backend are developed together in **this single repository** and deployable as **one Vercel project** without any external chat servers, separate Express backends, microservices, or Docker dependencies.
+Finding reliable local service providers such as electricians, plumbers, carpenters, mechanics, and technicians is often difficult. People usually depend on word-of-mouth recommendations, local contacts, or scattered social media posts, making the process slow and unreliable.
 
----
+At the same time, skilled workers struggle to reach potential customers and showcase their experience, skills, and past work in a professional manner.
 
-## 🌟 Key Features
+Additionally, many people own second-hand products that they no longer use but lack a convenient local platform to sell them to nearby buyers.
 
-1. **Local Service Discovery (`/providers`)**
-   - Find nearby skilled professionals (Electricians, Plumbers, Carpenters, Painters, Mechanics, AC Techs, Appliance Techs, Cleaners).
-   - Multi-parameter search by profession, locality, keywords, minimum rating, and years of experience.
-   - LinkedIn-style networking cards with skill badges, ratings, and experience.
+FixLink addresses these challenges by creating a unified platform where users can discover trusted local professionals, connect directly with them, and buy or sell second-hand products within their community.
 
-2. **Professional Profiles (`/providers/[id]`)**
-   - Verified credentials, biography, and availability status.
-   - Interactive project portfolio gallery showcasing past work.
-   - 100% verified customer ratings and reviews with anti-abuse protection (prevents self-reviews and duplicate reviews).
 
-3. **Become a Provider (`/become-provider`)**
-   - Frictionless in-place conversion: any registered user can publish their tradesperson profile without creating a separate account.
+## Project Description
 
-4. **Second-Hand Marketplace (`/marketplace`)**
-   - Buy and sell pre-owned items locally with zero shipping hassles and standard, fair transparent platform fees.
-   - Filter by category (Phones, Computers, Electronics, Furniture, Appliances, Vehicles, Tools, Books, Gaming), condition (New, Like New, Good, Fair), and price range.
+FixLink is a community-focused web platform that combines three key functionalities:
 
-5. **Sell an Item (`/sell`)**
-   - Simple 2-minute listing flow supporting multiple image URLs, category, condition grading, price, and neighborhood.
+1. **Local Service Marketplace**
 
-6. **Direct Database-Backed Messaging (`/messages`)**
-   - Instant 1-to-1 conversation threads with unread indicators and read receipts (`readAt`).
-   - 100% Vercel serverless-native: uses efficient database queries and optimistic polling instead of fragile persistent WebSockets.
+   * Users can search for nearby electricians, plumbers, carpenters, technicians, and other skilled workers.
+   * Service providers can create professional profiles highlighting their skills, experience, portfolio, ratings, and reviews.
 
-7. **Saved Items (`/saved`)**
-   - Bookmark favorite professionals for future home repairs and save interesting marketplace listings.
+2. **Professional Profile System**
 
-8. **Unified User Dashboard (`/dashboard`)**
-   - Overview metrics, my listings manager (toggle ACTIVE / SOLD / REMOVE, delete), provider profile editor, and received customer reviews.
+   * Similar to a simplified LinkedIn experience for skilled workers.
+   * Providers can showcase work history, experience, portfolio images, and customer feedback.
 
-9. **Admin Moderation Portal (`/admin`)**
-   - Restricted to `ADMIN` users.
-   - Live KPI overview, user management (suspend, elevate roles), marketplace listing moderation, review moderation, and user reports handling queue.
+3. **Second-Hand Marketplace**
 
-10. **System Design Documentation (`docs/DESIGN.md`)**
-    - Comprehensive technical specifications, ASCII Entity Relationship Diagram (ERD), user journey flows, UI design tokens, and deployment handbook.
+   * Users can list used products for sale.
+   * Buyers can browse local listings and contact sellers directly.
+
+The platform helps customers find trusted professionals, helps workers attract more clients, and encourages local buying and selling through a single, easy-to-use application.
 
 ---
 
-## 🛠️ Technology Stack
+## Google AI Usage
 
-- **Framework**: [Next.js](https://nextjs.org/) (App Router, Server Components & Route Handlers)
-- **Language**: [TypeScript](https://www.typescriptlang.org/) (Strictly typed)
-- **Styling**: [Tailwind CSS v4](https://tailwindcss.com/)
-- **Database & ORM**: [PostgreSQL](https://www.postgresql.org/) with [Prisma ORM](https://www.prisma.io/)
-- **Authentication**: Custom stateless JWT authentication using [jose](https://github.com/panva/jose) in secure `HttpOnly` cookies, with [bcryptjs](https://github.com/dcodeIO/bcrypt.js) password hashing
-- **Icons**: [Lucide React](https://lucide.dev/)
+### Tools / Models Used
+* Gemini 3.8 Flash (medium) 
+
+## Tech Stack Used
+
+### Frontend
+
+* Next.js
+* TypeScript
+* Tailwind CSS
+
+### Backend
+
+* Next.js API Routes
+* Prisma ORM
+
+### Database
+
+* PostgreSQL
+
+### Authentication
+
+* JWT Authentication
+
+### Deployment
+
+* Vercel
 
 ---
 
-## 🚀 Quick Start (Local Development)
+### How Google AI Was Used
 
-### 1. Clone & Install Dependencies
+Explain clearly how AI is integrated into your project.
+- We have not integrated AI into our project.
+---
+
+### GitHub Repo Link of the Project
+
+[GitHub Repository](https://github.com/dhanesh-a-dev/odyssey-fixlink-nexora)
+
+---
+
+## Proof of Google AI Usage
+
+- We have not integrated AI into our project.
+
+---
+
+## Screenshots
+
+Application screenshots are available in the:
+
+```text
+/ screenshots
+```
+
+folder, including:
+
+* Landing Page
+* Provider Search
+* Provider Profile
+* Marketplace
+* Dashboard
+* Messaging Interface
+
+---
+
+## Demo Video
+
+Demo Video Link:
+
+[Watch Demo](https://your-demo-video-link)
+
+---
+
+## Installation Steps
+
+### 1. Clone the Repository
+
 ```bash
-git clone https://github.com/dhanesh-a-dev/odyssey-fixlink-nexora.git
-cd odyssey-fixlink-nexora
+git clone https://github.com/github_user_name/repo_name.git
+cd repo_name
+```
+
+### 2. Install Dependencies
+
+```bash
 npm install
 ```
 
-### 2. Configure Environment Variables
-Copy `.env.example` to `.env`:
-```bash
-cp .env.example .env
-```
+### 3. Configure Environment Variables
 
-Configure your PostgreSQL connection string in `.env`:
+Create a `.env` file:
+
 ```env
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/fixlink?schema=public"
-JWT_SECRET="your-super-secret-jwt-key-at-least-32-chars-long"
-NODE_ENV="development"
+DATABASE_URL=your_database_url
+JWT_SECRET=your_secret
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
-*(Note: If testing without a local PostgreSQL instance, FixLink automatically uses an intelligent in-memory store initialized with realistic demo data, ensuring 100% zero-config execution!)*
+### 4. Run Database Migrations
 
-### 3. Generate Prisma Client & Seed Database
 ```bash
-npx prisma generate
-npm run seed
+npx prisma migrate deploy
 ```
 
-### 4. Start Development Server
+### 5. Seed Sample Data (Optional)
+
+```bash
+npx prisma db seed
+```
+
+### 6. Start Development Server
+
 ```bash
 npm run dev
 ```
-Open [http://localhost:3000](http://localhost:3000) in your browser.
 
----
+### 7. Open Application
 
-## 🔑 Demo Accounts
+```text
+http://localhost:3000
+```
 
-For rapid testing and grading, FixLink includes pre-seeded demo accounts with preset passwords:
+### 8. Production Deployment
 
-| Role | Email | Password | Details |
-| :--- | :--- | :--- | :--- |
-| **Admin** | `admin@fixlink.local` | `Admin123!` | Full access to `/admin` moderation portal |
-| **Provider** | `marcus.vance@fixlink.local` | `Password123!` | Master Electrician with verified portfolio & reviews |
-| **Customer / Buyer** | `sarah.j@fixlink.local` | `Password123!` | Active buyer with saved items & active chats |
+Push the repository to GitHub and deploy directly through Vercel.
 
----
-
-## 🚢 Production Deployment (GitHub → Vercel)
-
-FixLink is designed specifically for Vercel's serverless environment.
-
-1. **Push to GitHub**:
-   ```bash
-   git add .
-   git commit -m "Deploy FixLink"
-   git push origin main
-   ```
-2. **Import into Vercel**:
-   - Create a new project on [Vercel](https://vercel.com).
-   - Select your GitHub repository.
-   - Vercel automatically detects Next.js.
-3. **Set Environment Variables in Vercel Project Settings**:
-   - `DATABASE_URL`: Your PostgreSQL connection string (e.g. from Neon, Vercel Postgres, Supabase, or Railway).
-   - `JWT_SECRET`: A 32+ character random string for signing secure auth cookies.
-   - `NODE_ENV`: `production`.
-4. **Deploy**:
-   - Vercel automatically executes `npm install` (which triggers `prisma generate` via postinstall) and `npm run build`.
-   - Your full-stack app is live in seconds with global edge acceleration!
-
----
-
-## 📄 Documentation
-
-For full architectural details, ASCII ERD diagrams, and security specifications, see [docs/DESIGN.md](docs/DESIGN.md).
+The application will automatically build and deploy using the configured environment variables.
