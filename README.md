@@ -107,7 +107,7 @@ folder, including:
 
 Demo Video Link:
 
-[Watch Demo](https://your-demo-video-link)
+[Watch Demo](https://drive.google.com/file/d/1I-TUXG38UFdbEzhX6VSPuh94MoJZgEus/view?usp=sharing)
 
 ---
 
@@ -116,8 +116,8 @@ Demo Video Link:
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/github_user_name/repo_name.git
-cd repo_name
+git clone https://github.com/dhanesh-a-dev/odyssey-fixlink-nexora
+cd odyssey-fixlink-nexora)
 ```
 
 ### 2. Install Dependencies
@@ -133,7 +133,6 @@ Create a `.env` file:
 ```env
 DATABASE_URL=your_database_url
 JWT_SECRET=your_secret
-GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ### 4. Run Database Migrations
