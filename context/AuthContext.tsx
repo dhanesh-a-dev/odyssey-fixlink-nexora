@@ -6,14 +6,16 @@ import { UserSummary } from "@/types";
 interface AuthContextType {
   user: UserSummary | null;
   loading: boolean;
-  login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  login: (email: string, password: string) => Promise<{ success: boolean; error?: string; user?: UserSummary }>;
   register: (data: {
     name: string;
     email: string;
     password: string;
     location: string;
     phone?: string;
-  }) => Promise<{ success: boolean; error?: string }>;
+    role?: "USER" | "PROVIDER";
+    profession?: string;
+  }) => Promise<{ success: boolean; error?: string; user?: UserSummary }>;
   logout: () => Promise<void>;
   refreshUser: () => Promise<void>;
 }
@@ -29,7 +31,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const res = await fetch("/api/auth/me");
       if (res.ok) {
         const data = await res.json();
-        setUser(data.user);
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
       } else {
         setUser(null);
       }
@@ -55,8 +61,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       if (!res.ok) {
         return { success: false, error: data.error || "Login failed" };
       }
-      await refreshUser();
-      return { success: true };
+      if (data.user) {
+        setUser(data.user);
+      }
+      refreshUser();
+      return { success: true, user: data.user };
     } catch {
       return { success: false, error: "Network error occurred" };
     }
@@ -68,6 +77,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     password: string;
     location: string;
     phone?: string;
+    role?: "USER" | "PROVIDER";
+    profession?: string;
   }) => {
     try {
       const res = await fetch("/api/auth/register", {
@@ -82,8 +93,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           error: data.details?.[0]?.message || data.error || "Registration failed",
         };
       }
-      await refreshUser();
-      return { success: true };
+      if (data.user) {
+        setUser(data.user);
+      }
+      refreshUser();
+      return { success: true, user: data.user };
     } catch {
       return { success: false, error: "Network error occurred" };
     }

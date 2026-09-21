@@ -22,6 +22,7 @@ import { ProductCard } from "@/components/marketplace/ProductCard";
 import { getProviders } from "@/lib/services/providerService";
 import { getProducts } from "@/lib/services/productService";
 
+export const dynamic = "force-dynamic";
 export const revalidate = 0; // Fresh on each request
 
 export default async function HomePage() {
@@ -96,16 +97,16 @@ export default async function HomePage() {
 
           {/* Hero Heading */}
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-slate-900 max-w-4xl mx-auto leading-[1.12]">
-            Find trusted people. <br className="hidden sm:inline" />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-600 via-teal-600 to-indigo-600">
-              Hire locally.
+            The digital bridge connecting you to{" "}
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-teal-600 to-emerald-600">
+              trusted local experts
             </span>{" "}
-            Trade nearby.
+            instantly.
           </h1>
 
           {/* Supporting Copy */}
           <p className="mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Discover skilled professionals, connect with verified neighbors, and buy or sell items locally. Real-time direct messaging with standard, transparent service fees.
+            Discover certified tradespeople, book local services, and chat directly in real-time. Verified profiles, honest reviews, and seamless direct messaging.
           </p>
 
           {/* Dual CTAs */}

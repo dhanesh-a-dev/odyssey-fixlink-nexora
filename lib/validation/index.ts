@@ -13,6 +13,8 @@ export function validateRegistration(data: {
   password?: string;
   location?: string;
   phone?: string;
+  role?: string;
+  profession?: string;
 }): { valid: boolean; errors: ValidationError[] } {
   const errors: ValidationError[] = [];
 

@@ -58,6 +58,8 @@ export async function createUser(data: {
   password: string;
   location: string;
   phone?: string;
+  role?: Role;
+  profession?: string;
   latitude?: number;
   longitude?: number;
 }): Promise<UserSummary> {
@@ -65,6 +67,7 @@ export async function createUser(data: {
   const cleanEmail = data.email.toLowerCase().trim();
   const id = `usr-${Date.now()}`;
   const now = new Date();
+  const assignedRole: Role = data.role || "USER";
 
   try {
     const created = await prisma.user.create({
@@ -76,9 +79,28 @@ export async function createUser(data: {
         phone: data.phone?.trim() || null,
         latitude: data.latitude || null,
         longitude: data.longitude || null,
-        role: "USER",
+        role: assignedRole,
       },
     });
+
+    if (assignedRole === "PROVIDER") {
+      try {
+        await prisma.providerProfile.create({
+          data: {
+            userId: created.id,
+            profession: data.profession?.trim() || "Skilled Professional",
+            bio: `${created.name} is a verified community service professional based in ${created.location}.`,
+            experienceYears: 2,
+            skills: JSON.stringify([data.profession?.trim() || "Service", "Repairs", "Maintenance"]),
+            location: created.location,
+            availability: "Available",
+          },
+        });
+      } catch (profErr) {
+        console.error("Auto provider profile creation error:", profErr);
+      }
+    }
+
     return {
       id: created.id,
       name: created.name,
@@ -103,11 +125,29 @@ export async function createUser(data: {
       location: data.location.trim(),
       latitude: data.latitude || 37.7749,
       longitude: data.longitude || -122.4194,
-      role: "USER" as Role,
+      role: assignedRole,
       createdAt: now,
       updatedAt: now,
     };
     memoryStore.users.push(newUser);
+
+    if (assignedRole === "PROVIDER") {
+      memoryStore.profiles.push({
+        id: `prv-${Date.now()}`,
+        userId: newUser.id,
+        profession: data.profession?.trim() || "Skilled Professional",
+        bio: `${newUser.name} is a verified community service professional based in ${newUser.location}.`,
+        experienceYears: 2,
+        skills: [data.profession?.trim() || "Service", "Repairs", "Maintenance"],
+        location: newUser.location,
+        latitude: 37.7749,
+        longitude: -122.4194,
+        availability: "Available",
+        createdAt: now,
+        updatedAt: now,
+      });
+    }
+
     return {
       id: newUser.id,
       name: newUser.name,

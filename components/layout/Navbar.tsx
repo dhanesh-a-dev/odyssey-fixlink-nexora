@@ -68,15 +68,30 @@ export function Navbar() {
         {/* Brand Logo */}
         <div className="flex items-center gap-8">
           <Link href="/" className="flex items-center gap-2.5 group">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white shadow-md shadow-emerald-500/20 group-hover:scale-105 transition-transform">
-              <span className="font-extrabold text-xl tracking-tight">F</span>
+            <div className="relative w-10 h-10 flex-shrink-0 flex items-center justify-center">
+              <img
+                src="/logo.png"
+                alt="FixLink Logo"
+                className="w-10 h-10 object-contain rounded-xl drop-shadow-xs group-hover:scale-105 transition-transform"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                  const fallback = e.currentTarget.parentElement?.querySelector(".logo-fallback") as HTMLElement;
+                  if (fallback) fallback.style.display = "flex";
+                }}
+              />
+              <div
+                style={{ display: "none" }}
+                className="logo-fallback w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 items-center justify-center text-white shadow-md shadow-blue-500/20 group-hover:scale-105 transition-transform"
+              >
+                <span className="font-extrabold text-xl tracking-tight">F</span>
+              </div>
             </div>
             <div>
               <span className="text-xl font-extrabold tracking-tight text-slate-900 block leading-tight">
-                Fix<span className="text-emerald-600">Link</span>
+                Fix<span className="text-blue-600">Link</span>
               </span>
-              <span className="text-[10px] uppercase font-semibold text-slate-400 tracking-wider block">
-                Connect. Hire. Trade.
+              <span className="text-[10px] font-semibold text-slate-400 tracking-tight block">
+                Trusted Local Experts
               </span>
             </div>
           </Link>

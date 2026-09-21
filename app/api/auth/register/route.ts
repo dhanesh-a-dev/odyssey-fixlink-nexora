@@ -26,6 +26,8 @@ export async function POST(req: Request) {
       password: body.password,
       location: body.location,
       phone: body.phone,
+      role: body.role === "PROVIDER" ? "PROVIDER" : "USER",
+      profession: body.profession,
     });
 
     const token = await signToken({

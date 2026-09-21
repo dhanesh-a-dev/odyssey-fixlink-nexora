@@ -22,56 +22,54 @@ export async function getUserConversations(userId: string): Promise<Conversation
       orderBy: { updatedAt: "desc" },
     });
 
-    if (dbConversations.length > 0) {
-      // Calculate unread count for each conversation
-      const result: ConversationType[] = [];
-      for (const conv of dbConversations) {
-        const unread = await prisma.message.count({
-          where: {
-            conversationId: conv.id,
-            senderId: { not: userId },
-            readAt: null,
+    // Calculate unread count for each conversation
+    const result: ConversationType[] = [];
+    for (const conv of dbConversations) {
+      const unread = await prisma.message.count({
+        where: {
+          conversationId: conv.id,
+          senderId: { not: userId },
+          readAt: null,
+        },
+      });
+
+      const lastMsg = conv.messages[0];
+
+      result.push({
+        id: conv.id,
+        createdAt: conv.createdAt,
+        updatedAt: conv.updatedAt,
+        unreadCount: unread,
+        lastMessage: lastMsg
+          ? {
+              id: lastMsg.id,
+              conversationId: lastMsg.conversationId,
+              senderId: lastMsg.senderId,
+              content: lastMsg.content,
+              createdAt: lastMsg.createdAt,
+              readAt: lastMsg.readAt,
+            }
+          : null,
+        participants: conv.participants.map((p) => ({
+          userId: p.userId,
+          user: {
+            id: p.user.id,
+            name: p.user.name,
+            email: p.user.email,
+            avatarUrl: p.user.avatarUrl,
+            phone: p.user.phone,
+            location: p.user.location,
+            latitude: p.user.latitude,
+            longitude: p.user.longitude,
+            role: p.user.role,
+            createdAt: p.user.createdAt,
           },
-        });
-
-        const lastMsg = conv.messages[0];
-
-        result.push({
-          id: conv.id,
-          createdAt: conv.createdAt,
-          updatedAt: conv.updatedAt,
-          unreadCount: unread,
-          lastMessage: lastMsg
-            ? {
-                id: lastMsg.id,
-                conversationId: lastMsg.conversationId,
-                senderId: lastMsg.senderId,
-                content: lastMsg.content,
-                createdAt: lastMsg.createdAt,
-                readAt: lastMsg.readAt,
-              }
-            : null,
-          participants: conv.participants.map((p) => ({
-            userId: p.userId,
-            user: {
-              id: p.user.id,
-              name: p.user.name,
-              email: p.user.email,
-              avatarUrl: p.user.avatarUrl,
-              phone: p.user.phone,
-              location: p.user.location,
-              latitude: p.user.latitude,
-              longitude: p.user.longitude,
-              role: p.user.role,
-              createdAt: p.user.createdAt,
-            },
-          })),
-        });
-      }
-      return result;
+        })),
+      });
     }
+    return result;
   } catch {
-    // Database query failed
+    // Database query failed, fall back to memoryStore
   }
 
   // Memory store fallback
@@ -214,23 +212,21 @@ export async function getConversationMessages(
       orderBy: { createdAt: "asc" },
     });
 
-    if (messages.length > 0) {
-      return messages.map((m) => ({
-        id: m.id,
-        conversationId: m.conversationId,
-        senderId: m.senderId,
-        content: m.content,
-        createdAt: m.createdAt,
-        readAt: m.readAt,
-        sender: {
-          id: m.sender.id,
-          name: m.sender.name,
-          avatarUrl: m.sender.avatarUrl,
-        },
-      }));
-    }
+    return messages.map((m) => ({
+      id: m.id,
+      conversationId: m.conversationId,
+      senderId: m.senderId,
+      content: m.content,
+      createdAt: m.createdAt,
+      readAt: m.readAt,
+      sender: {
+        id: m.sender.id,
+        name: m.sender.name,
+        avatarUrl: m.sender.avatarUrl,
+      },
+    }));
   } catch {
-    // Database query failed
+    // Database query failed, fall back to memoryStore
   }
 
   // Memory store fallback
@@ -310,8 +306,16 @@ export async function sendMessage(
     // Memory store fallback
   }
 
-  const conv = memoryStore.conversations.find((c) => c.id === conversationId);
-  if (!conv) throw new Error("CONVERSATION_NOT_FOUND");
+  let conv = memoryStore.conversations.find((c) => c.id === conversationId);
+  if (!conv) {
+    conv = {
+      id: conversationId,
+      createdAt: now,
+      updatedAt: now,
+      participantIds: [senderId],
+    };
+    memoryStore.conversations.unshift(conv);
+  }
 
   conv.updatedAt = now;
   const newMsg = {

@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import Link from "next/link";
 import { Wrench, ShieldCheck, HeartHandshake, MapPin } from "lucide-react";
@@ -9,20 +11,35 @@ export function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-12">
           {/* Brand Info */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-500 to-teal-600 flex items-center justify-center text-white font-extrabold text-xl shadow-md">
-                F
+            <Link href="/" className="inline-flex items-center gap-2.5 group">
+              <div className="relative w-10 h-10 flex-shrink-0 flex items-center justify-center">
+                <img
+                  src="/logo.png"
+                  alt="FixLink Logo"
+                  className="w-10 h-10 object-contain rounded-xl drop-shadow-xs group-hover:scale-105 transition-transform"
+                  onError={(e) => {
+                    e.currentTarget.style.display = "none";
+                    const fallback = e.currentTarget.parentElement?.querySelector(".footer-logo-fallback") as HTMLElement;
+                    if (fallback) fallback.style.display = "flex";
+                  }}
+                />
+                <div
+                  style={{ display: "none" }}
+                  className="footer-logo-fallback w-10 h-10 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 items-center justify-center text-white font-extrabold text-xl shadow-md"
+                >
+                  F
+                </div>
               </div>
               <span className="text-2xl font-extrabold tracking-tight text-white">
-                Fix<span className="text-emerald-400">Link</span>
+                Fix<span className="text-blue-400">Link</span>
               </span>
-            </div>
+            </Link>
             <p className="text-sm text-slate-400 max-w-sm leading-relaxed">
-              FixLink is the community platform connecting neighbors with trusted skilled professionals and an active local second-hand marketplace.
+              The digital bridge connecting you to trusted local experts instantly.
             </p>
             <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold tracking-wide uppercase">
               <MapPin className="w-4 h-4" />
-              Hyperlocal • Standard Fair Commission • Neighbor-Powered
+              Hyperlocal • Transparent Pricing • Neighbor-Powered
             </div>
             <p className="text-xs text-slate-500 leading-relaxed pt-1">
               FixLink charges a standard, transparent service & marketplace commission on completed bookings and sales to support neighborhood verification and platform operations.

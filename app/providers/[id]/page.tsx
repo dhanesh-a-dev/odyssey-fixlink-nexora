@@ -25,7 +25,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
-export default function ProviderDetailPage({
+function ProviderDetailContent({
   params,
 }: {
   params: Promise<{ id: string }>;
@@ -436,5 +436,17 @@ export default function ProviderDetailPage({
         targetTitle={`Provider: ${provider.user?.name} (${provider.profession})`}
       />
     </div>
+  );
+}
+
+export default function ProviderDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return (
+    <Suspense fallback={<div className="p-12 text-center text-sm text-slate-500 font-medium">Loading profile...</div>}>
+      <ProviderDetailContent params={params} />
+    </Suspense>
   );
 }
