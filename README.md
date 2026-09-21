@@ -22,7 +22,7 @@ The entire frontend and backend are developed together in **this single reposito
    - Frictionless in-place conversion: any registered user can publish their tradesperson profile without creating a separate account.
 
 4. **Second-Hand Marketplace (`/marketplace`)**
-   - Buy and sell pre-owned items locally with zero shipping hassles and zero commission cuts.
+   - Buy and sell pre-owned items locally with zero shipping hassles and standard, fair transparent platform fees.
    - Filter by category (Phones, Computers, Electronics, Furniture, Appliances, Vehicles, Tools, Books, Gaming), condition (New, Like New, Good, Fair), and price range.
 
 5. **Sell an Item (`/sell`)**

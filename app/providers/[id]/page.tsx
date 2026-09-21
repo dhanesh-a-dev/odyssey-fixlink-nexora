@@ -1,13 +1,14 @@
 "use client";
 
-import React, { useState, useEffect, use } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect, use, Suspense } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import { ProviderProfileType, ReviewType } from "@/types";
 import { StarRating } from "@/components/ui/StarRating";
 import { Badge } from "@/components/ui/Badge";
 import { Button } from "@/components/ui/Button";
 import { ReviewModal } from "@/components/providers/ReviewModal";
 import { ContactSellerModal } from "@/components/marketplace/ContactSellerModal";
+import { BookingRequestModal } from "@/components/providers/BookingRequestModal";
 import { ReportModal } from "@/components/marketplace/ReportModal";
 import {
   MapPin,
@@ -31,6 +32,7 @@ export default function ProviderDetailPage({
 }) {
   const { id } = use(params);
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user } = useAuth();
 
   const [provider, setProvider] = useState<ProviderProfileType | null>(null);
@@ -41,8 +43,16 @@ export default function ProviderDetailPage({
   // Modals
   const [reviewModalOpen, setReviewModalOpen] = useState(false);
   const [contactModalOpen, setContactModalOpen] = useState(false);
+  const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [reportModalOpen, setReportModalOpen] = useState(false);
   const [selectedPortfolioImage, setSelectedPortfolioImage] = useState<any>(null);
+
+  // Auto-open contact modal if directed from "Hire" action
+  useEffect(() => {
+    if (searchParams.get("action") === "contact") {
+      setContactModalOpen(true);
+    }
+  }, [searchParams]);
 
   const fetchProvider = async () => {
     setLoading(true);
@@ -192,14 +202,22 @@ export default function ProviderDetailPage({
             </div>
 
             {/* Action Buttons */}
-            <div className="flex items-center gap-3">
+            <div className="flex flex-wrap items-center gap-2.5">
               <Button
                 variant="outline"
                 size="md"
                 onClick={() => setReviewModalOpen(true)}
                 icon={<Star className="w-4 h-4 text-amber-500" />}
               >
-                Write Review
+                Review
+              </Button>
+              <Button
+                variant="outline"
+                size="md"
+                onClick={() => setBookingModalOpen(true)}
+                icon={<Calendar className="w-4 h-4 text-emerald-600" />}
+              >
+                Book Service
               </Button>
               <Button
                 variant="primary"
@@ -397,6 +415,16 @@ export default function ProviderDetailPage({
         onClose={() => setContactModalOpen(false)}
         sellerId={provider.userId}
         sellerName={provider.user?.name || provider.profession}
+      />
+
+      {/* Booking Request Modal */}
+      <BookingRequestModal
+        isOpen={bookingModalOpen}
+        onClose={() => setBookingModalOpen(false)}
+        providerId={provider.userId}
+        providerName={provider.user?.name || provider.profession}
+        defaultProfession={provider.profession}
+        defaultLocation={provider.location}
       />
 
       {/* Report Modal */}

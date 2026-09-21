@@ -116,7 +116,7 @@ export default function SellProductPage() {
             List an Item for Sale
           </h1>
           <p className="text-xs text-slate-500 mt-2 leading-relaxed">
-            Sell your electronics, furniture, tools, bikes, or pre-owned goods directly to neighbors with zero commission fees.
+            Sell your electronics, furniture, tools, bikes, or pre-owned goods directly to neighbors with standard transparent platform commissions on completed sales.
           </p>
         </div>
 

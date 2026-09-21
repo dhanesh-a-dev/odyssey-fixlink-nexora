@@ -28,7 +28,7 @@ FixLink is a cohesive, lightweight local community platform that merges **Local 
 
 ### 1.4 Core Value Proposition
 - **Unified Identity:** One account to hire, offer services, buy, and sell.
-- **Direct Engagement:** Direct database-backed messaging with zero predatory commissions.
+- **Direct Engagement:** Direct database-backed messaging with transparent, standard service commissions.
 - **Proof of Work:** Dedicated portfolio showcases and tamper-resistant reviews.
 - **Lightweight & Fast:** Serverless-native Next.js architecture deployed directly on Vercel with PostgreSQL.
 

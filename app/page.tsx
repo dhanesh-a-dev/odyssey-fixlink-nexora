@@ -105,7 +105,7 @@ export default async function HomePage() {
 
           {/* Supporting Copy */}
           <p className="mt-6 text-base sm:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Discover skilled professionals, connect with people around you, and buy or sell things locally. Free direct messaging and zero middleman markups.
+            Discover skilled professionals, connect with verified neighbors, and buy or sell items locally. Real-time direct messaging with standard, transparent service fees.
           </p>
 
           {/* Dual CTAs */}
@@ -149,11 +149,11 @@ export default async function HomePage() {
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>Direct Neighborhood Chat</span>
+              <span>Direct Real-Time Chat</span>
             </div>
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-              <span>No Middleman Fees</span>
+              <span>Standard Transparent Commission</span>
             </div>
           </div>
         </div>

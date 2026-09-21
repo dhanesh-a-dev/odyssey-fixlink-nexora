@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { ProductType } from "@/types";
 import { Badge } from "@/components/ui/Badge";
-import { MapPin, Bookmark, Tag } from "lucide-react";
+import { MapPin, Bookmark, Tag, MessageSquare } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
 interface ProductCardProps {
@@ -123,22 +123,32 @@ export function ProductCard({ product }: ProductCardProps) {
 
       {/* Seller & Location Footer */}
       <div className="px-5 pb-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2 min-w-0">
           {product.seller?.avatarUrl && (
             <img
               src={product.seller.avatarUrl}
               alt={product.seller.name}
-              className="w-5 h-5 rounded-full object-cover"
+              className="w-5 h-5 rounded-full object-cover shrink-0"
             />
           )}
-          <span className="font-medium text-slate-700 truncate max-w-[110px]">
+          <span className="font-medium text-slate-700 truncate max-w-[100px]">
             {product.seller?.name || "Local Seller"}
           </span>
         </div>
 
-        <div className="flex items-center gap-1 text-slate-400">
-          <MapPin className="w-3.5 h-3.5" />
-          <span className="truncate max-w-[120px]">{product.location}</span>
+        <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-1 text-slate-400">
+            <MapPin className="w-3.5 h-3.5" />
+            <span className="truncate max-w-[90px]">{product.location}</span>
+          </div>
+
+          <Link
+            href={`/messages?recipientId=${product.sellerId}&item=${encodeURIComponent(product.title)}`}
+            className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-600 hover:text-white transition-colors"
+            title={`Message ${product.seller?.name || "Seller"}`}
+          >
+            <MessageSquare className="w-3.5 h-3.5" />
+          </Link>
         </div>
       </div>
     </div>

@@ -5,9 +5,10 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { ProviderProfileType } from "@/types";
 import { ProviderCard } from "@/components/providers/ProviderCard";
 import { ProviderFilters } from "@/components/providers/ProviderFilters";
+import { ProviderMapView } from "@/components/providers/ProviderMapView";
 import { CardSkeleton } from "@/components/ui/Skeleton";
 import { EmptyState } from "@/components/ui/EmptyState";
-import { Wrench } from "lucide-react";
+import { Wrench, LayoutGrid, Map } from "lucide-react";
 
 function ProvidersContent() {
   const searchParams = useSearchParams();
@@ -18,6 +19,7 @@ function ProvidersContent() {
   const [search, setSearch] = useState(searchParams.get("search") || "");
   const [minRating, setMinRating] = useState(Number(searchParams.get("minRating")) || 0);
   const [sortBy, setSortBy] = useState(searchParams.get("sortBy") || "relevance");
+  const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
 
   const [providers, setProviders] = useState<ProviderProfileType[]>([]);
   const [total, setTotal] = useState(0);
@@ -58,19 +60,54 @@ function ProvidersContent() {
     setSortBy("relevance");
   };
 
+  const handleMessageClick = (targetUserId: string) => {
+    router.push(`/messages?recipientId=${targetUserId}`);
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
       {/* Page Title */}
-      <div className="mb-8">
-        <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
-          Local Skilled Services
-        </span>
-        <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
-          Discover Local Professionals
-        </h1>
-        <p className="text-sm text-slate-500 mt-1">
-          Browse vetted electricians, plumbers, carpenters, painters, and tradespeople in your neighborhood.
-        </p>
+      <div className="flex flex-col md:flex-row md:items-end justify-between mb-8 gap-4">
+        <div>
+          <span className="text-xs font-bold uppercase tracking-wider text-emerald-600 block mb-1">
+            Local Skilled Services
+          </span>
+          <h1 className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+            Discover Local Professionals
+          </h1>
+          <p className="text-sm text-slate-500 mt-1">
+            Browse verified electricians, plumbers, carpenters, painters, and tradespeople in your neighborhood.
+          </p>
+        </div>
+
+        {/* View Mode Switcher */}
+        <div className="flex items-center gap-1 p-1 rounded-2xl bg-slate-100 border border-slate-200 self-start md:self-auto">
+          <button
+            type="button"
+            onClick={() => setViewMode("grid")}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              viewMode === "grid"
+                ? "bg-white text-slate-900 shadow-xs"
+                : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <LayoutGrid className="w-3.5 h-3.5" />
+            <span>Grid View</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setViewMode("map")}
+            className={`flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+              viewMode === "map"
+                ? "bg-emerald-600 text-white shadow-xs"
+                : "text-slate-500 hover:text-slate-800"
+            }`}
+          >
+            <Map className="w-3.5 h-3.5" />
+            <span>Neighborhood Map</span>
+          </button>
+        </div>
       </div>
 
       {/* Filter Bar */}
@@ -103,7 +140,7 @@ function ProvidersContent() {
         )}
       </div>
 
-      {/* Grid or Empty State */}
+      {/* Grid or Map View */}
       {loading ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {[1, 2, 3, 4, 5, 6].map((i) => (
@@ -118,10 +155,16 @@ function ProvidersContent() {
           actionLabel="Reset Search Filters"
           onAction={handleClearFilters}
         />
+      ) : viewMode === "map" ? (
+        <ProviderMapView providers={providers} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {providers.map((provider) => (
-            <ProviderCard key={provider.id} provider={provider} />
+            <ProviderCard
+              key={provider.id}
+              provider={provider}
+              onMessageClick={handleMessageClick}
+            />
           ))}
         </div>
       )}

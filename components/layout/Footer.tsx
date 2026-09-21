@@ -22,8 +22,11 @@ export function Footer() {
             </p>
             <div className="flex items-center gap-2 text-xs text-emerald-400 font-semibold tracking-wide uppercase">
               <MapPin className="w-4 h-4" />
-              Hyperlocal • Zero Commission • Neighbor-Powered
+              Hyperlocal • Standard Fair Commission • Neighbor-Powered
             </div>
+            <p className="text-xs text-slate-500 leading-relaxed pt-1">
+              FixLink charges a standard, transparent service & marketplace commission on completed bookings and sales to support neighborhood verification and platform operations.
+            </p>
           </div>
 
           {/* Skilled Services */}
@@ -107,7 +110,7 @@ export function Footer() {
           {/* Community & Safety */}
           <div>
             <h4 className="text-xs font-bold uppercase tracking-wider text-white mb-4">
-              Trust & Community
+              Trust & Legal
             </h4>
             <ul className="space-y-2.5 text-sm">
               <li className="flex items-center gap-1.5">
@@ -116,16 +119,21 @@ export function Footer() {
               </li>
               <li className="flex items-center gap-1.5">
                 <HeartHandshake className="w-4 h-4 text-emerald-400" />
-                <span>Direct Negotiations</span>
+                <span>Standard Fair Fees</span>
               </li>
               <li>
-                <Link href="/become-provider" className="hover:text-emerald-400 transition-colors">
-                  Become a Provider
+                <Link href="/privacy" className="hover:text-emerald-400 transition-colors">
+                  Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/dashboard" className="hover:text-emerald-400 transition-colors">
-                  User Dashboard
+                <Link href="/terms" className="hover:text-emerald-400 transition-colors">
+                  Terms of Service
+                </Link>
+              </li>
+              <li>
+                <Link href="/refund" className="hover:text-emerald-400 transition-colors">
+                  Cancellation & Refund Policy
                 </Link>
               </li>
             </ul>
@@ -134,10 +142,16 @@ export function Footer() {
 
         <div className="pt-8 border-t border-slate-800 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
           <p>© {new Date().getFullYear()} FixLink. Connect. Hire. Trade. All rights reserved.</p>
-          <div className="flex gap-6">
-            <span className="hover:text-slate-400 transition-colors">Privacy Policy</span>
-            <span className="hover:text-slate-400 transition-colors">Terms of Service</span>
-            <span className="hover:text-slate-400 transition-colors">Neighborhood Safety</span>
+          <div className="flex flex-wrap gap-6">
+            <Link href="/privacy" className="hover:text-slate-400 transition-colors">
+              Privacy Policy
+            </Link>
+            <Link href="/terms" className="hover:text-slate-400 transition-colors">
+              Terms of Service
+            </Link>
+            <Link href="/refund" className="hover:text-slate-400 transition-colors">
+              Cancellation & Refund Policy
+            </Link>
           </div>
         </div>
       </div>

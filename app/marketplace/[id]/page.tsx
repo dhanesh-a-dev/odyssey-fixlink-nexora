@@ -296,7 +296,7 @@ export default function ProductDetailPage({
             </div>
 
             <div className="p-3 bg-slate-50 rounded-2xl text-xs text-slate-500 leading-relaxed">
-              No online payments or shipping required. FixLink facilitates local in-person pickup with zero platform commissions.
+              Transparent, standard service commission applies on verified completed transactions to ensure neighbor safety, escrow reliability, and local community dispute support.
             </div>
           </div>
         </div>

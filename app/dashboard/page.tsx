@@ -24,18 +24,20 @@ import {
   MapPin,
   Clock,
   Shield,
+  Calendar,
 } from "lucide-react";
 
 export default function DashboardPage() {
   const router = useRouter();
   const { user, loading: authLoading } = useAuth();
 
-  const [activeTab, setActiveTab] = useState<"overview" | "listings" | "provider" | "reviews">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "listings" | "provider" | "reviews" | "bookings">("overview");
 
   // Dashboard Data
   const [myListings, setMyListings] = useState<ProductType[]>([]);
   const [myProviderProfile, setMyProviderProfile] = useState<ProviderProfileType | null>(null);
   const [conversations, setConversations] = useState<ConversationType[]>([]);
+  const [bookings, setBookings] = useState<any[]>([]);
   const [savedCount, setSavedCount] = useState({ providers: 0, products: 0 });
   const [loading, setLoading] = useState(true);
 
@@ -80,7 +82,14 @@ export default function DashboardPage() {
         setConversations(convData.conversations || []);
       }
 
-      // 4. Fetch saved count
+      // 4. Fetch bookings
+      const bookRes = await fetch("/api/bookings");
+      if (bookRes.ok) {
+        const bookData = await bookRes.json();
+        setBookings(bookData.bookings || []);
+      }
+
+      // 5. Fetch saved count
       const savedRes = await fetch("/api/saved");
       if (savedRes.ok) {
         const savedData = await savedRes.json();
@@ -131,6 +140,26 @@ export default function DashboardPage() {
       const res = await fetch(`/api/marketplace/${productId}`, { method: "DELETE" });
       if (res.ok) {
         setMyListings((prev) => prev.filter((p) => p.id !== productId));
+      }
+    } catch {
+      // silent
+    }
+  };
+
+  const handleUpdateBookingStatus = async (
+    bookingId: string,
+    status: "PENDING" | "ACCEPTED" | "DECLINED" | "COMPLETED"
+  ) => {
+    try {
+      const res = await fetch("/api/bookings", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingId, status }),
+      });
+      if (res.ok) {
+        setBookings((prev) =>
+          prev.map((b) => (b.id === bookingId ? { ...b, status } : b))
+        );
       }
     } catch {
       // silent
@@ -242,6 +271,19 @@ export default function DashboardPage() {
         >
           <LayoutDashboard className="w-4 h-4" />
           <span>Overview</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setActiveTab("bookings")}
+          className={`flex items-center gap-2 pb-3 px-3 text-sm font-bold border-b-2 transition-colors ${
+            activeTab === "bookings"
+              ? "border-emerald-600 text-emerald-600"
+              : "border-transparent text-slate-500 hover:text-slate-900"
+          }`}
+        >
+          <Calendar className="w-4 h-4" />
+          <span>Bookings & Requests ({bookings.length})</span>
         </button>
 
         <button
@@ -405,7 +447,144 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* 2. MY LISTINGS */}
+      {/* 2. BOOKINGS & SERVICE REQUESTS */}
+      {activeTab === "bookings" && (
+        <div className="space-y-6">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            <div>
+              <h2 className="text-xl font-bold text-slate-900">Service Bookings & Quotes</h2>
+              <p className="text-xs text-slate-500">
+                Manage appointment requests, incoming quote estimates, and job statuses.
+              </p>
+            </div>
+            <Link href="/providers">
+              <Button size="sm" variant="outline">
+                Find More Pros
+              </Button>
+            </Link>
+          </div>
+
+          {bookings.length === 0 ? (
+            <EmptyState
+              icon={Calendar}
+              title="No booking requests yet"
+              description="Browse verified local service professionals and request appointments for plumbing, electrical, carpentry, or repairs."
+              actionLabel="Explore Local Providers"
+              actionHref="/providers"
+            />
+          ) : (
+            <div className="space-y-4">
+              {bookings.map((b) => {
+                const isProviderOfJob = b.providerId === user?.id;
+                const otherPartyId = isProviderOfJob ? b.customerId : b.providerId;
+                const otherPartyName = isProviderOfJob ? b.customerName : b.providerName;
+
+                const statusStyles: Record<string, string> = {
+                  PENDING: "bg-amber-50 text-amber-700 border-amber-200",
+                  ACCEPTED: "bg-emerald-50 text-emerald-700 border-emerald-200",
+                  COMPLETED: "bg-blue-50 text-blue-700 border-blue-200",
+                  DECLINED: "bg-rose-50 text-rose-700 border-rose-200",
+                };
+
+                return (
+                  <div
+                    key={b.id}
+                    className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-xs space-y-4"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-100">
+                      <div>
+                        <div className="flex items-center gap-2">
+                          <h3 className="text-base font-bold text-slate-900">
+                            {b.serviceType}
+                          </h3>
+                          <span
+                            className={`px-2.5 py-0.5 rounded-full text-xs font-bold border ${
+                              statusStyles[b.status] || "bg-slate-100 text-slate-700 border-slate-200"
+                            }`}
+                          >
+                            {b.status}
+                          </span>
+                        </div>
+                        <p className="text-xs text-slate-500 mt-0.5">
+                          {isProviderOfJob ? "Customer" : "Service Pro"}:{" "}
+                          <strong className="text-slate-800">{otherPartyName}</strong> • {b.location}
+                        </p>
+                      </div>
+
+                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                        <Clock className="w-4 h-4 text-slate-400" />
+                        <span>Date: {b.preferredDate}</span>
+                        {b.estimatedBudget && (
+                          <>
+                            <span>•</span>
+                            <span className="text-emerald-700 font-bold">
+                              Budget: ${b.estimatedBudget}
+                            </span>
+                          </>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Notes */}
+                    <div className="p-3.5 rounded-2xl bg-slate-50 border border-slate-100 text-xs text-slate-700 leading-relaxed">
+                      <strong className="text-slate-900 block mb-1">Work Description:</strong>
+                      {b.notes}
+                    </div>
+
+                    {/* Actions */}
+                    <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                      <Link href={`/messages?recipientId=${otherPartyId}`}>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          icon={<MessageSquare className="w-3.5 h-3.5" />}
+                        >
+                          Chat with {isProviderOfJob ? "Client" : "Pro"}
+                        </Button>
+                      </Link>
+
+                      {isProviderOfJob && (
+                        <div className="flex items-center gap-2">
+                          {b.status === "PENDING" && (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="primary"
+                                onClick={() => handleUpdateBookingStatus(b.id, "ACCEPTED")}
+                              >
+                                Accept Booking
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleUpdateBookingStatus(b.id, "DECLINED")}
+                                className="text-rose-600 hover:bg-rose-50 border-rose-200"
+                              >
+                                Decline
+                              </Button>
+                            </>
+                          )}
+                          {b.status === "ACCEPTED" && (
+                            <Button
+                              size="sm"
+                              variant="secondary"
+                              onClick={() => handleUpdateBookingStatus(b.id, "COMPLETED")}
+                            >
+                              Mark as Completed
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
+      )}
+
+      {/* 3. MY LISTINGS */}
       {activeTab === "listings" && (
         <div className="space-y-6">
           <div className="flex items-center justify-between">
